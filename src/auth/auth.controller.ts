@@ -36,7 +36,7 @@ export class AuthController {
   @SerializeOptions({
     groups: ['me'],
   })
-  @Post('email/login')
+  @Post('login')
   @ApiOkResponse({
     type: LoginResponseDto,
   })
@@ -45,13 +45,13 @@ export class AuthController {
     return this.service.validateLogin(loginDto);
   }
 
-  @Post('email/register')
+  @Post('register')
   @HttpCode(HttpStatus.NO_CONTENT)
   async register(@Body() createUserDto: AuthRegisterLoginDto): Promise<void> {
     return this.service.register(createUserDto);
   }
 
-  @Post('email/confirm')
+  @Post('confirm-email')
   @HttpCode(HttpStatus.NO_CONTENT)
   async confirmEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
@@ -59,7 +59,7 @@ export class AuthController {
     return this.service.confirmEmail(confirmEmailDto.hash);
   }
 
-  @Post('email/confirm/new')
+  @Post('confirm-new-email')
   @HttpCode(HttpStatus.NO_CONTENT)
   async confirmNewEmail(
     @Body() confirmEmailDto: AuthConfirmEmailDto,
@@ -67,7 +67,7 @@ export class AuthController {
     return this.service.confirmNewEmail(confirmEmailDto.hash);
   }
 
-  @Post('forgot/password')
+  @Post('forgot-password')
   @HttpCode(HttpStatus.NO_CONTENT)
   async forgotPassword(
     @Body() forgotPasswordDto: AuthForgotPasswordDto,
@@ -75,7 +75,7 @@ export class AuthController {
     return this.service.forgotPassword(forgotPasswordDto.email);
   }
 
-  @Post('reset/password')
+  @Post('reset-password')
   @HttpCode(HttpStatus.NO_CONTENT)
   resetPassword(@Body() resetPasswordDto: AuthResetPasswordDto): Promise<void> {
     return this.service.resetPassword(
@@ -108,7 +108,7 @@ export class AuthController {
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   @HttpCode(HttpStatus.OK)
-  public refresh(@Request() request): Promise<RefreshResponseDto> {
+  public refreshAuth(@Request() request): Promise<RefreshResponseDto> {
     return this.service.refreshToken({
       sessionId: request.user.sessionId,
       hash: request.user.hash,
@@ -135,7 +135,7 @@ export class AuthController {
   @ApiOkResponse({
     type: User,
   })
-  public update(
+  public updateAuth(
     @Request() request,
     @Body() userDto: AuthUpdateDto,
   ): Promise<NullableType<User>> {
@@ -146,7 +146,7 @@ export class AuthController {
   @Delete('me')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.NO_CONTENT)
-  public async delete(@Request() request): Promise<void> {
+  public async deleteAuth(@Request() request): Promise<void> {
     return this.service.softDelete(request.user);
   }
 }

@@ -1,31 +1,49 @@
-import { Injectable } from '@nestjs/common';
-
-import { SessionRepository } from './infrastructure/persistence/session.repository';
-import { Session } from './domain/session';
+import {
+  // common
+  Injectable,
+} from '@nestjs/common';
+import { UpdateResult } from 'typeorm';
 import { User } from '../users/domain/user';
 import { NullableType } from '../utils/types/nullable.type';
+import { Session } from './domain/session';
+import { CreateSessionDto } from './dto/create-session.dto';
+import { UpdateSessionDto } from './dto/update-session.dto';
+import { SessionRepository } from './infrastructure/persistence/session.repository';
 
 @Injectable()
 export class SessionService {
-  constructor(private readonly sessionRepository: SessionRepository) {}
+  constructor(
+    // Dependencies here
+    private readonly sessionRepository: SessionRepository,
+  ) {}
+
+  create(createSessionDto: CreateSessionDto): Promise<Session> {
+    // Do not remove comment below.
+    // <creating-property />
+
+    return this.sessionRepository.create({
+      ...createSessionDto,
+      // Do not remove comment below.
+      // <creating-property-payload />
+    });
+  }
 
   findById(id: Session['id']): Promise<NullableType<Session>> {
     return this.sessionRepository.findById(id);
   }
 
-  create(
-    data: Omit<Session, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>,
-  ): Promise<Session> {
-    return this.sessionRepository.create(data);
-  }
-
   update(
     id: Session['id'],
-    payload: Partial<
-      Omit<Session, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>
-    >,
-  ): Promise<Session | null> {
-    return this.sessionRepository.update(id, payload);
+    updateSessionDto: UpdateSessionDto,
+  ): Promise<Session | UpdateResult> {
+    // Do not remove comment below.
+    // <updating-property />
+
+    return this.sessionRepository.update(id, {
+      ...updateSessionDto,
+      // Do not remove comment below.
+      // <updating-property-payload />
+    });
   }
 
   updateByHash(
@@ -50,5 +68,9 @@ export class SessionService {
     excludeSessionId: Session['id'];
   }): Promise<void> {
     return this.sessionRepository.deleteByUserIdWithExclude(conditions);
+  }
+
+  remove(id: Session['id']): Promise<UpdateResult> {
+    return this.sessionRepository.remove(id);
   }
 }

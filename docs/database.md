@@ -47,7 +47,7 @@ For support of both databases used [Hexagonal Architecture](architecture.md#hexa
    @Entity()
    export class Post extends EntityRelationalHelper {
      @PrimaryGeneratedColumn()
-     id: number;
+     id: number | string;
 
      @Column()
      title: string;
@@ -174,8 +174,6 @@ npm run seed:run:relational
         // Need for saving "this" context
         return () => {
           return this.repositoryUser.create({
-            firstName: faker.person.firstName(),
-            lastName: faker.person.lastName(),
             email: faker.internet.email(),
             password: faker.internet.password(),
             role: this.repositoryRole.create({

@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { RoleSeedService } from './role/role-seed.service';
 import { SeedModule } from './seed.module';
+
+import { RoleSeedService } from './role/role-seed.service';
 import { StatusSeedService } from './status/status-seed.service';
 import { UserSeedService } from './user/user-seed.service';
 

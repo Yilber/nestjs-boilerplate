@@ -1,10 +1,43 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../users/domain/user';
+import { SessionDto } from '../dto/session.dto';
+import { DatabaseConfig } from '../../database/config/database-config.type';
+import databaseConfig from '../../database/config/database.config';
 
-export class Session {
+// <database-block>
+const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
+  ? String
+  : Number;
+// </database-block>
+
+export class Session extends SessionDto {
+  @ApiProperty({
+    type: idType,
+  })
   id: number | string;
-  user: User;
+
+  @ApiProperty({
+    type: Number,
+  })
+  userId: number;
+
+  @ApiProperty({
+    type: String,
+  })
   hash: string;
-  createdAt: Date;
-  updatedAt: Date;
-  deletedAt: Date;
+
+  @ApiProperty({
+    type: User,
+  })
+  user?: User;
+
+  constructor(data?: Session) {
+    super(data);
+
+    if (data) {
+      this.userId = data.userId;
+      this.hash = data.hash;
+      this.user = data.user;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { FindOptionsWhere, Repository, In } from 'typeorm';
+import { FindOptionsWhere, Repository, In, UpdateResult } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { NullableType } from '../../../../../utils/types/nullable.type';
 import { FilterUserDto, SortUserDto } from '../../../../dto/query-user.dto';
@@ -19,9 +19,11 @@ export class UsersRelationalRepository implements UserRepository {
 
   async create(data: User): Promise<User> {
     const persistenceModel = UserMapper.toPersistence(data);
+
     const newEntity = await this.usersRepository.save(
       this.usersRepository.create(persistenceModel),
     );
+
     return UserMapper.toDomain(newEntity);
   }
 
@@ -35,6 +37,7 @@ export class UsersRelationalRepository implements UserRepository {
     paginationOptions: IPaginationOptions;
   }): Promise<User[]> {
     const where: FindOptionsWhere<UserEntity> = {};
+
     if (filterOptions?.roles?.length) {
       where.role = filterOptions.roles.map((role) => ({
         id: Number(role.id),
@@ -60,6 +63,17 @@ export class UsersRelationalRepository implements UserRepository {
   async findById(id: User['id']): Promise<NullableType<User>> {
     const entity = await this.usersRepository.findOne({
       where: { id: Number(id) },
+    });
+
+    return entity ? UserMapper.toDomain(entity) : null;
+  }
+
+  async findByRefId(refId: User['refId']): Promise<NullableType<User>> {
+    const entity = await this.usersRepository.findOne({
+      where: { refId },
+      // relations: {
+      //   sessions: true,
+      // },
     });
 
     return entity ? UserMapper.toDomain(entity) : null;
@@ -120,7 +134,7 @@ export class UsersRelationalRepository implements UserRepository {
     return UserMapper.toDomain(updatedEntity);
   }
 
-  async remove(id: User['id']): Promise<void> {
-    await this.usersRepository.softDelete(id);
+  remove(id: User['id']): Promise<UpdateResult> {
+    return this.usersRepository.softDelete(id);
   }
 }

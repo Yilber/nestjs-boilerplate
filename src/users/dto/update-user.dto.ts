@@ -1,11 +1,8 @@
-import { PartialType, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 import { CreateUserDto } from './create-user.dto';
 
-import { Transform, Type } from 'class-transformer';
-import { IsEmail, IsOptional, MinLength } from 'class-validator';
-import { FileDto } from '../../files/dto/file.dto';
-import { RoleDto } from '../../roles/dto/role.dto';
-import { StatusDto } from '../../statuses/dto/status.dto';
+import { Transform } from 'class-transformer';
+import { IsEmail, IsNumber, IsOptional, MinLength } from 'class-validator';
 import { lowerCaseTransformer } from '../../utils/transformers/lower-case.transformer';
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {
@@ -13,9 +10,9 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @Transform(lowerCaseTransformer)
   @IsOptional()
   @IsEmail()
-  email?: string | null;
+  email?: string;
 
-  @ApiPropertyOptional()
+  @ApiPropertyOptional({ example: '123456', type: String })
   @IsOptional()
   @MinLength(6)
   password?: string;
@@ -24,25 +21,13 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   socialId?: string | null;
 
-  @ApiPropertyOptional({ example: 'John', type: String })
+  @ApiPropertyOptional({ type: Number })
   @IsOptional()
-  firstName?: string | null;
+  @IsNumber()
+  roleId?: number;
 
-  @ApiPropertyOptional({ example: 'Doe', type: String })
+  @ApiPropertyOptional({ type: Number })
   @IsOptional()
-  lastName?: string | null;
-
-  @ApiPropertyOptional({ type: () => FileDto })
-  @IsOptional()
-  photo?: FileDto | null;
-
-  @ApiPropertyOptional({ type: () => RoleDto })
-  @IsOptional()
-  @Type(() => RoleDto)
-  role?: RoleDto | null;
-
-  @ApiPropertyOptional({ type: () => StatusDto })
-  @IsOptional()
-  @Type(() => StatusDto)
-  status?: StatusDto;
+  @IsNumber()
+  statusId?: number;
 }

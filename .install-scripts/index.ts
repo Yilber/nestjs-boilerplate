@@ -22,6 +22,7 @@ import removeRelationalPropertyGeneration from './scripts/property-generation-sc
         choices: [
           { title: 'PostgreSQL and MongoDB', value: 'pg-mongo' },
           { title: 'PostgreSQL', value: 'pg' },
+          { title: 'MySQL', value: 'mysql' },
           { title: 'MongoDB', value: 'mongo' },
         ],
       },
@@ -68,6 +69,14 @@ import removeRelationalPropertyGeneration from './scripts/property-generation-sc
 
   if (response.database === 'pg') {
     removeMongoDb();
+    removeDocumentResourceGeneration();
+    removeDocumentPropertyGeneration();
+    removeAllDbResourceGeneration();
+    removeAllDbPropertyGeneration();
+  }
+
+  if (response.database === 'mysql') {
+    removeMongoDb(true);
     removeDocumentResourceGeneration();
     removeDocumentPropertyGeneration();
     removeAllDbResourceGeneration();

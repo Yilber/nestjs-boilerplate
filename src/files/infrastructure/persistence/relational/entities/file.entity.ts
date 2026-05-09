@@ -4,13 +4,31 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
+import { FileType } from '../../../../domain/file';
 
-@Entity({ name: 'file' })
-export class FileEntity extends EntityRelationalHelper {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+@Entity({
+  name: 'files',
+})
+export class FileEntity
+  extends EntityRelationalHelperWithTimeStamp
+  implements FileType
+{
+  @PrimaryGeneratedColumn()
+  id: number | string;
 
-  @Column()
+  @Column({
+    nullable: false,
+    type: String,
+  })
   path: string;
+
+  constructor(data?: FileType) {
+    super(data);
+
+    if (data) {
+      this.id = Number(data.id);
+      this.path = data.path;
+    }
+  }
 }

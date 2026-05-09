@@ -2,16 +2,27 @@
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.ts
 ---
 import { ApiProperty } from '@nestjs/swagger';
+import { <%= name %>Dto } from '../dto/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.dto';
 
-export class <%= name %> {
+const idType = Number;
+
+export class <%= name %> extends <%= name %>Dto {
   @ApiProperty({
-    type: String,
+    type: idType,
   })
-  id: string;
+  id: number | string;
 
-  @ApiProperty()
-  createdAt: Date;
+ @ApiProperty({
+    type: String,
+    example: 'John',
+  })
+  name: string;
 
-  @ApiProperty()
-  updatedAt: Date;
+  constructor(data?: <%= name %>) {
+    super(data);
+
+    if(data){
+      this.name = data.name;
+    }
+  }
 }

@@ -61,7 +61,7 @@ export class AuthFacebookService {
       // Map Facebook data to our internal social user interface
       return {
         id: data.id,
-        email: data.email || undefined, // Email may not be present depending on user permissions
+        email: data.email ?? '', // Email may not be present depending on user permissions
         firstName: data.first_name || '',
         lastName: data.last_name || '',
       };

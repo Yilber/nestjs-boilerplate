@@ -19,10 +19,22 @@ export class StatusSeedService {
         this.repository.create({
           id: StatusEnum.active,
           name: 'Active',
+          description: '',
         }),
         this.repository.create({
           id: StatusEnum.inactive,
           name: 'Inactive',
+          description: '',
+        }),
+        this.repository.create({
+          id: StatusEnum.deactivated,
+          name: 'Deactivated',
+          description: '',
+        }),
+        this.repository.create({
+          id: StatusEnum.blocked,
+          name: 'Blocked',
+          description: '',
         }),
       ]);
     }

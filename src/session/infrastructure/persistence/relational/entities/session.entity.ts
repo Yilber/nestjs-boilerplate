@@ -1,39 +1,50 @@
 import {
-  CreateDateColumn,
+  Column,
   Entity,
-  Index,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-  DeleteDateColumn,
-  Column,
-  UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
-
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
+import { Session } from '../../../../domain/session';
 
 @Entity({
-  name: 'session',
+  name: 'sessions',
 })
-export class SessionEntity extends EntityRelationalHelper {
+export class SessionEntity
+  extends EntityRelationalHelperWithTimeStamp
+  implements Session
+{
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | string;
 
-  @ManyToOne(() => UserEntity, {
-    eager: true,
+  @Column({
+    type: Number,
+    nullable: false,
   })
-  @Index()
-  user: UserEntity;
+  userId: number;
 
-  @Column()
+  @Column({
+    type: String,
+    nullable: false,
+  })
   hash: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @ManyToOne(() => UserEntity, (users) => users.sessions, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
+  })
+  @JoinColumn([{ name: 'userId', referencedColumnName: 'id' }])
+  user?: UserEntity;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  constructor(data?: Session) {
+    super(data);
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+    if (data) {
+      this.id = Number(data.id);
+      this.userId = Number(data.userId);
+      this.hash = data.hash;
+    }
+  }
 }

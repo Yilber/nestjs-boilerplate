@@ -1,10 +1,11 @@
-import { Exclude, Expose } from 'class-transformer';
-import { FileType } from '../../files/domain/file';
-import { Role } from '../../roles/domain/role';
-import { Status } from '../../statuses/domain/status';
 import { ApiProperty } from '@nestjs/swagger';
-import databaseConfig from '../../database/config/database.config';
+import { Exclude, Expose } from 'class-transformer';
+import { SessionDto } from '../../session/dto/session.dto';
+import { StatusDto } from '../../statuses/dto/status.dto';
+import { UserDto } from '../dto/user.dto';
+import { RoleDto } from '../../roles/dto/role.dto';
 import { DatabaseConfig } from '../../database/config/database-config.type';
+import databaseConfig from '../../database/config/database.config';
 
 // <database-block>
 const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
@@ -12,7 +13,7 @@ const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
   : Number;
 // </database-block>
 
-export class User {
+export class User extends UserDto {
   @ApiProperty({
     type: idType,
   })
@@ -23,10 +24,10 @@ export class User {
     example: 'john.doe@example.com',
   })
   @Expose({ groups: ['me', 'admin'] })
-  email: string | null;
+  email: string;
 
   @Exclude({ toPlainOnly: true })
-  password?: string;
+  password: string;
 
   @ApiProperty({
     type: String,
@@ -43,38 +44,50 @@ export class User {
   socialId?: string | null;
 
   @ApiProperty({
-    type: String,
-    example: 'John',
+    type: Number,
+    nullable: false,
+    example: 1,
   })
-  firstName: string | null;
+  roleId: number;
 
   @ApiProperty({
-    type: String,
-    example: 'Doe',
+    type: Number,
+    nullable: false,
+    example: 1,
   })
-  lastName: string | null;
+  statusId: number;
 
   @ApiProperty({
-    type: () => FileType,
+    type: () => RoleDto,
   })
-  photo?: FileType | null;
+  role?: RoleDto;
 
   @ApiProperty({
-    type: () => Role,
+    type: () => StatusDto,
   })
-  role?: Role | null;
+  status?: StatusDto;
 
   @ApiProperty({
-    type: () => Status,
+    type: () => SessionDto,
+    isArray: true,
   })
-  status?: Status;
+  sessions?: SessionDto[];
 
-  @ApiProperty()
-  createdAt: Date;
+  constructor(data?: User) {
+    super(data);
 
-  @ApiProperty()
-  updatedAt: Date;
+    if (data) {
+      this.email = data.email;
+      this.password = data.password;
+      this.roleId = data.roleId;
+      this.statusId = data.statusId;
 
-  @ApiProperty()
-  deletedAt: Date;
+      this.provider = data.provider;
+      this.socialId = data.socialId;
+
+      this.role = data.role;
+      this.status = data.status;
+      this.sessions = data.sessions;
+    }
+  }
 }

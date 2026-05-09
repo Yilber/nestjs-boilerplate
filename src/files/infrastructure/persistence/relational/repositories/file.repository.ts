@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FileEntity } from '../entities/file.entity';
-import { In, Repository } from 'typeorm';
-import { FileRepository } from '../../file.repository';
-
-import { FileMapper } from '../mappers/file.mapper';
-import { FileType } from '../../../../domain/file';
+import { In, Repository, UpdateResult } from 'typeorm';
 import { NullableType } from '../../../../../utils/types/nullable.type';
+import { FileType } from '../../../../domain/file';
+import { FileRepository } from '../../file.repository';
+import { FileEntity } from '../entities/file.entity';
+import { FileMapper } from '../mappers/file.mapper';
 
 @Injectable()
 export class FileRelationalRepository implements FileRepository {
@@ -26,9 +25,15 @@ export class FileRelationalRepository implements FileRepository {
 
   async findById(id: FileType['id']): Promise<NullableType<FileType>> {
     const entity = await this.fileRepository.findOne({
-      where: {
-        id: id,
-      },
+      where: { id: Number(id) },
+    });
+
+    return entity ? FileMapper.toDomain(entity) : null;
+  }
+
+  async findByRefId(refId: FileType['refId']): Promise<NullableType<FileType>> {
+    const entity = await this.fileRepository.findOne({
+      where: { refId },
     });
 
     return entity ? FileMapper.toDomain(entity) : null;
@@ -42,5 +47,9 @@ export class FileRelationalRepository implements FileRepository {
     });
 
     return entities.map((entity) => FileMapper.toDomain(entity));
+  }
+
+  async remove(id: FileType['id']): Promise<UpdateResult> {
+    return this.fileRepository.softDelete(id);
   }
 }

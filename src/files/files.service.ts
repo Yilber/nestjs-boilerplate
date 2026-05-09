@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-
-import { FileRepository } from './infrastructure/persistence/file.repository';
-import { FileType } from './domain/file';
 import { NullableType } from '../utils/types/nullable.type';
+import { FileType } from './domain/file';
+import { FileRepository } from './infrastructure/persistence/file.repository';
 
 @Injectable()
 export class FilesService {
@@ -10,6 +9,10 @@ export class FilesService {
 
   findById(id: FileType['id']): Promise<NullableType<FileType>> {
     return this.fileRepository.findById(id);
+  }
+
+  findByRefId(refId: FileType['refId']): Promise<NullableType<FileType>> {
+    return this.fileRepository.findByRefId(refId);
   }
 
   findByIds(ids: FileType['id'][]): Promise<FileType[]> {

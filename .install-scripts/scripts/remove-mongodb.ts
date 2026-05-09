@@ -2,7 +2,7 @@ import replace from '../helpers/replace';
 import path from 'path';
 import fs from 'fs';
 
-const removeMongoDb = async () => {
+const removeMongoDb = async (isMySQL = false) => {
   const filesToRemove = [
     path.join(
       process.cwd(),
@@ -263,6 +263,23 @@ const removeMongoDb = async () => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'users', 'dto', 'user.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'src', 'statuses', 'domain', 'status.ts'),
     actions: [
       {
@@ -280,7 +297,75 @@ const removeMongoDb = async () => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'statuses', 'dto', 'status.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'src', 'roles', 'domain', 'role.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'roles', 'dto', 'role.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'session', 'domain', 'session.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'session', 'dto', 'session.dto.ts'),
     actions: [
       {
         find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
@@ -319,7 +404,16 @@ const removeMongoDb = async () => {
         find: /\s*\"test:e2e:document:docker\":.*/g,
         replace: '',
       },
-    ],
+    ].concat(
+      isMySQL
+        ? []
+        : [
+            {
+              find: /\s*\"mysql2\":.*\,/g,
+              replace: '',
+            },
+          ],
+    ),
   });
 
   filesToRemove.map((file) => {

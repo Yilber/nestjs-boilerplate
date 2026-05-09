@@ -1,24 +1,31 @@
 ---
 to: src/<%= h.inflection.transform(name, ['pluralize', 'underscore', 'dasherize']) %>/infrastructure/persistence/relational/entities/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>.entity.ts
 ---
-import {
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
+import { <%= name %> } from '../../../../domain/<%= h.inflection.transform(name, ['underscore', 'dasherize']) %>';
 
 @Entity({
   name: '<%= h.inflection.transform(name, ['underscore']) %>',
 })
-export class <%= name %>Entity extends EntityRelationalHelper {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export class <%= name %>Entity extends EntityRelationalHelperWithTimeStamp
+  implements <%= name %>
+{
+  @PrimaryGeneratedColumn()
+  id: number | string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @Column({
+    nullable: false,
+    type: String,
+  })
+  name: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  constructor(data?: <%= name %>) {
+    super(data);
+
+    if (data) {
+      this.id = Number(data.id);
+      this.name = data.name;
+    }
+  }
 }

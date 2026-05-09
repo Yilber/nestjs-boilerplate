@@ -10,8 +10,10 @@ Switching between TypeORM and Mongoose is implemented based on the [Hexagonal Ar
 
 - [Comfortable development (PostgreSQL + TypeORM)](#comfortable-development-postgresql--typeorm)
   - [Video guideline (PostgreSQL + TypeORM)](#video-guideline-postgresql--typeorm)
+- [Comfortable development (MySQL + TypeORM)](#comfortable-development-mysql--typeorm)
 - [Comfortable development (MongoDB + Mongoose)](#comfortable-development-mongodb--mongoose)
 - [Quick run (PostgreSQL + TypeORM)](#quick-run-postgresql--typeorm)
+- [Quick run (MySQL + TypeORM)](#quick-run-mysql--typeorm)
 - [Quick run (MongoDB + Mongoose)](#quick-run-mongodb--mongoose)
 - [Links](#links)
 
@@ -84,6 +86,78 @@ Switching between TypeORM and Mongoose is implemented based on the [Hexagonal Ar
 
 ---
 
+## Comfortable development (MySQL + TypeORM)
+
+1. Clone repository
+
+   ```bash
+   git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
+   ```
+
+1. Go to folder, and copy `env-example-relational` as `.env`.
+
+   ```bash
+   cd my-app/
+   cp env-example-relational .env
+   ```
+
+1. Change `DATABASE_TYPE=postgres` to `DATABASE_TYPE=mysql`
+
+   ```env
+   # set "localhost" if you are running app on local machine
+   # set "mysql" if you are running app on docker
+   ```
+   
+   Change `DATABASE_HOST=postgres` to `DATABASE_HOST=localhost`
+   
+   Change `DATABASE_PORT=5432` to `DATABASE_PORT=3306`
+
+   Change `MAIL_HOST=maildev` to `MAIL_HOST=localhost`
+
+1. Run additional container:
+
+   ```bash
+   docker compose up -d mysql adminer maildev
+   ```
+
+1. Install dependency
+
+   ```bash
+   npm install
+   ```
+
+1. Run app configuration
+
+   > You should run this command only the first time on initialization of your project, all next time skip it.
+
+   > If you want to contribute to the boilerplate, you should NOT run this command.
+
+   ```bash
+   npm run app:config
+   ```
+
+1. Run migrations
+
+   ```bash
+   npm run migration:run
+   ```
+
+1. Run seeds
+
+   ```bash
+   npm run seed:run:relational
+   ```
+
+1. Run app in dev mode
+
+   ```bash
+   npm run start:dev
+   ```
+
+1. Open <http://localhost:3000>
+
+---
+
 ## Comfortable development (MongoDB + Mongoose)
 
 1. Clone repository
@@ -140,6 +214,39 @@ Switching between TypeORM and Mongoose is implemented based on the [Hexagonal Ar
 ---
 
 ## Quick run (PostgreSQL + TypeORM)
+
+If you want quick run your app, you can use following commands:
+
+1. Clone repository
+
+   ```bash
+   git clone --depth 1 https://github.com/brocoders/nestjs-boilerplate.git my-app
+   ```
+
+1. Go to folder, and copy `env-example-relational` as `.env`.
+
+   ```bash
+   cd my-app/
+   cp env-example-relational .env
+   ```
+
+1. Run containers
+
+   ```bash
+   docker compose up -d
+   ```
+
+1. For check status run
+
+   ```bash
+   docker compose logs
+   ```
+
+1. Open <http://localhost:3000>
+
+---
+
+## Quick run (MySQL + TypeORM)
 
 If you want quick run your app, you can use following commands:
 

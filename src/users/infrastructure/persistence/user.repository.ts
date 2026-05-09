@@ -1,13 +1,13 @@
+import { UpdateResult } from 'typeorm';
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
 import { User } from '../../domain/user';
-
 import { FilterUserDto, SortUserDto } from '../../dto/query-user.dto';
 
 export abstract class UserRepository {
   abstract create(
-    data: Omit<User, 'id' | 'createdAt' | 'deletedAt' | 'updatedAt'>,
+    data: Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>,
   ): Promise<User>;
 
   abstract findManyWithPagination({
@@ -20,9 +20,14 @@ export abstract class UserRepository {
     paginationOptions: IPaginationOptions;
   }): Promise<User[]>;
 
+  abstract findByRefId(refId: User['refId']): Promise<NullableType<User>>;
+
   abstract findById(id: User['id']): Promise<NullableType<User>>;
+
   abstract findByIds(ids: User['id'][]): Promise<User[]>;
+
   abstract findByEmail(email: User['email']): Promise<NullableType<User>>;
+
   abstract findBySocialIdAndProvider({
     socialId,
     provider,
@@ -34,7 +39,7 @@ export abstract class UserRepository {
   abstract update(
     id: User['id'],
     payload: DeepPartial<User>,
-  ): Promise<User | null>;
+  ): Promise<User | UpdateResult>;
 
-  abstract remove(id: User['id']): Promise<void>;
+  abstract remove(id: User['id']): Promise<UpdateResult>;
 }

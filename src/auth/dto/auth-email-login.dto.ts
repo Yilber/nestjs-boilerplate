@@ -10,7 +10,7 @@ export class AuthEmailLoginDto {
   @IsNotEmpty()
   email: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: '123456', type: String })
   @IsNotEmpty()
   password: string;
 }

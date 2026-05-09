@@ -1,36 +1,34 @@
 import {
   Column,
-  CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   Index,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { RoleEntity } from '../../../../../roles/infrastructure/persistence/relational/entities/role.entity';
+import { SessionEntity } from '../../../../../session/infrastructure/persistence/relational/entities/session.entity';
 import { StatusEntity } from '../../../../../statuses/infrastructure/persistence/relational/entities/status.entity';
-import { FileEntity } from '../../../../../files/infrastructure/persistence/relational/entities/file.entity';
-
+import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
+import { User } from '../../../../domain/user';
 import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
-import { EntityRelationalHelper } from '../../../../../utils/relational-entity-helper';
 
 @Entity({
-  name: 'user',
+  name: 'users',
 })
-export class UserEntity extends EntityRelationalHelper {
+export class UserEntity
+  extends EntityRelationalHelperWithTimeStamp
+  implements User
+{
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number | string;
 
-  // For "string | null" we need to use String type.
-  // More info: https://github.com/typeorm/typeorm/issues/2567
-  @Column({ type: String, unique: true, nullable: true })
-  email: string | null;
+  @Column({ type: String, unique: true, nullable: false })
+  email: string;
 
-  @Column({ nullable: true })
-  password?: string;
+  @Column({ type: String, nullable: false })
+  password: string;
 
   @Column({ default: AuthProvidersEnum.email })
   provider: string;
@@ -39,36 +37,41 @@ export class UserEntity extends EntityRelationalHelper {
   @Column({ type: String, nullable: true })
   socialId?: string | null;
 
-  @Index()
-  @Column({ type: String, nullable: true })
-  firstName: string | null;
+  @Column({ type: Number, nullable: false })
+  roleId: number;
 
-  @Index()
-  @Column({ type: String, nullable: true })
-  lastName: string | null;
+  @Column({ type: Number, nullable: false })
+  statusId: number;
 
-  @OneToOne(() => FileEntity, {
-    eager: true,
+  @ManyToOne(() => RoleEntity, (role) => role.users, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
   })
-  @JoinColumn()
-  photo?: FileEntity | null;
+  @JoinColumn([{ name: 'roleId', referencedColumnName: 'id' }])
+  role?: RoleEntity;
 
-  @ManyToOne(() => RoleEntity, {
-    eager: true,
+  @ManyToOne(() => StatusEntity, (status) => status.users, {
+    onDelete: 'NO ACTION',
+    onUpdate: 'NO ACTION',
   })
-  role?: RoleEntity | null;
-
-  @ManyToOne(() => StatusEntity, {
-    eager: true,
-  })
+  @JoinColumn([{ name: 'statusId', referencedColumnName: 'id' }])
   status?: StatusEntity;
 
-  @CreateDateColumn()
-  createdAt: Date;
+  @OneToMany(() => SessionEntity, (sessions) => sessions.user)
+  sessions?: SessionEntity[];
 
-  @UpdateDateColumn()
-  updatedAt: Date;
+  constructor(data?: User) {
+    super(data);
 
-  @DeleteDateColumn()
-  deletedAt: Date;
+    if (data) {
+      this.id = Number(data.id);
+      this.email = data.email;
+      this.password = data.password;
+      this.roleId = data.roleId;
+      this.statusId = data.statusId;
+
+      this.provider = data.provider;
+      this.socialId = data.socialId;
+    }
+  }
 }

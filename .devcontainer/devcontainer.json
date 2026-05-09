@@ -1,0 +1,7 @@
+{
+  "name": "Brocoders Nestjs Boilerplate",
+  "build": {
+    "context": "..",
+    "dockerfile": "../Dockerfile"
+  }
+}

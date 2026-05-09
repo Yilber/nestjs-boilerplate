@@ -1,11 +1,28 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
+import { TimeStampDto } from '../../utils/dto/timeStamp.dto';
+import { DatabaseConfig } from '../../database/config/database-config.type';
+import databaseConfig from '../../database/config/database.config';
 
-export class UserDto {
+// <database-block>
+const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
+  ? String
+  : Number;
+// </database-block>
+
+export class UserDto extends TimeStampDto {
   @ApiProperty({
-    type: String,
+    type: idType,
     example: 'userId',
   })
   @IsNotEmpty()
-  id: string | number;
+  id: number | string;
+
+  constructor(data?: UserDto) {
+    super(data);
+
+    if (data) {
+      this.id = Number(data.id);
+    }
+  }
 }

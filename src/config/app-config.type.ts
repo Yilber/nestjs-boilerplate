@@ -3,7 +3,7 @@ export type AppConfig = {
   name: string;
   workingDirectory: string;
   frontendDomain?: string;
-  backendDomain: string;
+  backendDomain?: string;
   port: number;
   apiPrefix: string;
   fallbackLanguage: string;

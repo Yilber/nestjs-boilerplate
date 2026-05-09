@@ -5,29 +5,31 @@ import {
   UnauthorizedException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import ms from 'ms';
-import crypto from 'crypto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcryptjs';
-import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
-import { AuthUpdateDto } from './dto/auth-update.dto';
-import { AuthProvidersEnum } from './auth-providers.enum';
-import { SocialInterface } from '../social/interfaces/social.interface';
-import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
-import { NullableType } from '../utils/types/nullable.type';
-import { LoginResponseDto } from './dto/login-response.dto';
-import { ConfigService } from '@nestjs/config';
-import { JwtRefreshPayloadType } from './strategies/types/jwt-refresh-payload.type';
-import { JwtPayloadType } from './strategies/types/jwt-payload.type';
-import { UsersService } from '../users/users.service';
+import crypto from 'crypto';
+import ms from 'ms';
 import { AllConfigType } from '../config/config.type';
 import { MailService } from '../mail/mail.service';
 import { RoleEnum } from '../roles/roles.enum';
 import { Session } from '../session/domain/session';
+import { CreateSessionDto } from '../session/dto/create-session.dto';
 import { SessionService } from '../session/session.service';
+import { SocialInterface } from '../social/interfaces/social.interface';
 import { StatusEnum } from '../statuses/statuses.enum';
 import { User } from '../users/domain/user';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
+import { NullableType } from '../utils/types/nullable.type';
+import { AuthProvidersEnum } from './auth-providers.enum';
+import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
+import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
+import { AuthUpdateDto } from './dto/auth-update.dto';
+import { LoginResponseDto } from './dto/login-response.dto';
+import { JwtPayloadType } from './strategies/types/jwt-payload.type';
+import { JwtRefreshPayloadType } from './strategies/types/jwt-refresh-payload.type';
 
 @Injectable()
 export class AuthService {
@@ -43,10 +45,10 @@ export class AuthService {
     const user = await this.usersService.findByEmail(loginDto.email);
 
     if (!user) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
+      throw new UnauthorizedException({
+        status: HttpStatus.UNAUTHORIZED,
         errors: {
-          email: 'notFound',
+          email: 'Email not found',
         },
       });
     }
@@ -55,7 +57,7 @@ export class AuthService {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
         errors: {
-          email: `needLoginViaProvider:${user.provider}`,
+          email: `Need to login via provider: ${user.provider}`,
         },
       });
     }
@@ -64,7 +66,7 @@ export class AuthService {
       throw new UnprocessableEntityException({
         status: HttpStatus.UNPROCESSABLE_ENTITY,
         errors: {
-          password: 'incorrectPassword',
+          password: 'Password should not be empty',
         },
       });
     }
@@ -75,10 +77,10 @@ export class AuthService {
     );
 
     if (!isValidPassword) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
+      throw new UnauthorizedException({
+        status: HttpStatus.UNAUTHORIZED,
         errors: {
-          password: 'incorrectPassword',
+          password: 'Incorrect password',
         },
       });
     }
@@ -88,14 +90,16 @@ export class AuthService {
       .update(randomStringGenerator())
       .digest('hex');
 
-    const session = await this.sessionService.create({
-      user,
+    const createSession: CreateSessionDto = {
+      userId: Number(user.id),
       hash,
-    });
+    };
+
+    const session = await this.sessionService.create(createSession);
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
       id: user.id,
-      role: user.role,
+      role: { id: user.roleId },
       sessionId: session.id,
       hash,
     });
@@ -142,15 +146,19 @@ export class AuthService {
         id: StatusEnum.active,
       };
 
-      user = await this.usersService.create({
-        email: socialEmail ?? null,
-        firstName: socialData.firstName ?? null,
-        lastName: socialData.lastName ?? null,
+      const salt = await bcrypt.genSalt();
+      const password = await bcrypt.hash('secret', salt);
+
+      const createUserDto: CreateUserDto = {
+        email: socialEmail,
+        password: password,
+        roleId: role.id,
+        statusId: status.id,
         socialId: socialData.id,
         provider: authProvider,
-        role,
-        status,
-      });
+      };
+
+      user = await this.usersService.create(createUserDto);
 
       user = await this.usersService.findById(user.id);
     }
@@ -170,7 +178,7 @@ export class AuthService {
       .digest('hex');
 
     const session = await this.sessionService.create({
-      user,
+      userId: Number(user.id),
       hash,
     });
 
@@ -196,13 +204,8 @@ export class AuthService {
   async register(dto: AuthRegisterLoginDto): Promise<void> {
     const user = await this.usersService.create({
       ...dto,
-      email: dto.email,
-      role: {
-        id: RoleEnum.user,
-      },
-      status: {
-        id: StatusEnum.inactive,
-      },
+      roleId: RoleEnum.user,
+      statusId: StatusEnum.inactive,
     });
 
     const hash = await this.jwtService.signAsync(
@@ -251,19 +254,14 @@ export class AuthService {
 
     const user = await this.usersService.findById(userId);
 
-    if (
-      !user ||
-      user?.status?.id?.toString() !== StatusEnum.inactive.toString()
-    ) {
+    if (!user || user?.statusId !== StatusEnum.inactive) {
       throw new NotFoundException({
         status: HttpStatus.NOT_FOUND,
-        error: `notFound`,
+        error: `Not found`,
       });
     }
 
-    user.status = {
-      id: StatusEnum.active,
-    };
+    user.statusId = StatusEnum.active;
 
     await this.usersService.update(user.id, user);
   }
@@ -303,9 +301,7 @@ export class AuthService {
     }
 
     user.email = newEmail;
-    user.status = {
-      id: StatusEnum.active,
-    };
+    user.statusId = StatusEnum.active;
 
     await this.usersService.update(user.id, user);
   }
@@ -505,20 +501,21 @@ export class AuthService {
       { hash },
     );
 
+    // || session.hash !== data.hash
     if (!session) {
       throw new UnauthorizedException();
     }
 
-    const user = await this.usersService.findById(session.user.id);
+    const user = await this.usersService.findById(session.userId);
 
-    if (!user?.role) {
+    if (!user?.roleId) {
       throw new UnauthorizedException();
     }
 
     const { token, refreshToken, tokenExpires } = await this.getTokensData({
-      id: session.user.id,
+      id: session.userId,
       role: {
-        id: user.role.id,
+        id: user.roleId,
       },
       sessionId: session.id,
       hash,

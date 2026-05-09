@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Allow } from 'class-validator';
-import databaseConfig from '../../database/config/database.config';
+import { UserDto } from '../../users/dto/user.dto';
+import { RoleDto } from '../dto/role.dto';
 import { DatabaseConfig } from '../../database/config/database-config.type';
+import databaseConfig from '../../database/config/database.config';
 
 // <database-block>
 const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
@@ -9,17 +10,37 @@ const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
   : Number;
 // </database-block>
 
-export class Role {
-  @Allow()
+export class Role extends RoleDto {
   @ApiProperty({
     type: idType,
   })
   id: number | string;
 
-  @Allow()
   @ApiProperty({
     type: String,
-    example: 'admin',
+    example: 'Admin',
   })
-  name?: string;
+  name: string;
+
+  @ApiProperty({
+    type: String,
+    example: 'Admin Role',
+  })
+  description: string;
+
+  @ApiProperty({
+    type: UserDto,
+    isArray: true,
+  })
+  users?: UserDto[];
+
+  constructor(data?: Role) {
+    super(data);
+
+    if (data) {
+      this.name = data.name;
+      this.description = data.description;
+      this.users = data.users;
+    }
+  }
 }

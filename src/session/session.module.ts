@@ -17,7 +17,10 @@ const infrastructurePersistenceModule = (databaseConfig() as DatabaseConfig)
 // </database-block>
 
 @Module({
-  imports: [infrastructurePersistenceModule],
+  imports: [
+    // do not remove this comment
+    infrastructurePersistenceModule,
+  ],
   providers: [SessionService],
   exports: [SessionService, infrastructurePersistenceModule],
 })

@@ -1,0 +1,105 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In, UpdateResult } from 'typeorm';
+import { StatusEntity } from '../entities/status.entity';
+import { NullableType } from '../../../../../utils/types/nullable.type';
+import { Status } from '../../../../domain/status';
+import { StatusRepository } from '../../status.repository';
+import { StatusMapper } from '../mappers/status.mapper';
+import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+
+@Injectable()
+export class StatusRelationalRepository implements StatusRepository {
+  constructor(
+    @InjectRepository(StatusEntity)
+    private readonly statusRepository: Repository<StatusEntity>,
+  ) {}
+
+  async create(data: Status): Promise<Status> {
+    const persistenceModel = StatusMapper.toPersistence(data);
+
+    const newEntity = await this.statusRepository.save(
+      this.statusRepository.create(persistenceModel),
+    );
+
+    return StatusMapper.toDomain(newEntity);
+  }
+
+  async findAllWithPagination({
+    paginationOptions,
+  }: {
+    paginationOptions: IPaginationOptions;
+  }): Promise<Status[]> {
+    const entities = await this.statusRepository.find({
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+    });
+
+    return entities.map((entity) => StatusMapper.toDomain(entity));
+  }
+
+  async findByName(name: Status['name']): Promise<NullableType<Status>> {
+    const entity = await this.statusRepository.findOne({
+      where: { name: String(name) },
+    });
+
+    return entity ? StatusMapper.toDomain(entity) : null;
+  }
+
+  async findByRefId(refId: Status['refId']): Promise<NullableType<Status>> {
+    const entity = await this.statusRepository.findOne({
+      where: { refId: String(refId) },
+    });
+
+    return entity ? StatusMapper.toDomain(entity) : null;
+  }
+
+  async findById(id: Status['id']): Promise<NullableType<Status>> {
+    const entity = await this.statusRepository.findOne({
+      where: { id: Number(id) },
+    });
+
+    return entity ? StatusMapper.toDomain(entity) : null;
+  }
+
+  async findByIds(ids: Status['id'][]): Promise<Status[]> {
+    const entities = await this.statusRepository.find({
+      where: { id: In(ids) },
+    });
+
+    return entities.map((entity) => StatusMapper.toDomain(entity));
+  }
+
+  async update(
+    id: Status['id'],
+    payload: Partial<Status>,
+  ): Promise<Status | UpdateResult> {
+    const entity = await this.statusRepository.findOne({
+      where: { id: Number(id) },
+    });
+
+    if (!entity) {
+      throw new NotFoundException(
+        'Record not found',
+        `Status with ID ${id} does not exist.`,
+      );
+    }
+
+    const updatedEntity = await this.statusRepository.save(
+      this.statusRepository.create(
+        StatusMapper.toPersistence({
+          ...StatusMapper.toDomain(entity),
+          ...payload,
+        }),
+      ),
+    );
+
+    return StatusMapper.toDomain(updatedEntity);
+  }
+
+  /*
+  async remove(id: Status['id']): Promise<UpdateResult> {    
+    return this.statusRepository.softDelete(id);
+  }
+  */
+}

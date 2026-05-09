@@ -1,21 +1,27 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Allow } from 'class-validator';
 import { Transform } from 'class-transformer';
-import fileConfig from '../config/file.config';
 import { FileConfig, FileDriver } from '../config/file-config.type';
+import fileConfig from '../config/file.config';
 
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { AppConfig } from '../../config/app-config.type';
 import appConfig from '../../config/app.config';
+import { FileDto } from '../dto/file.dto';
+import { DatabaseConfig } from '../../database/config/database-config.type';
+import databaseConfig from '../../database/config/database.config';
 
-export class FileType {
+// <database-block>
+const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
+  ? String
+  : Number;
+// </database-block>
+
+export class FileType extends FileDto {
   @ApiProperty({
-    type: String,
-    example: 'cbcfa8b8-3a25-4adb-a9c6-e325f0d0f3ae',
+    type: idType,
   })
-  @Allow()
-  id: string;
+  id: number | string;
 
   @ApiProperty({
     type: String,
@@ -53,4 +59,12 @@ export class FileType {
     },
   )
   path: string;
+
+  constructor(data?: FileType) {
+    super(data);
+
+    if (data) {
+      this.path = data.path;
+    }
+  }
 }
