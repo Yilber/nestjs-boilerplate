@@ -60,6 +60,64 @@ const removeMongoDb = async (isMySQL = false) => {
     path.join(process.cwd(), 'src', 'utils', 'document-entity-helper.ts'),
   ];
 
+  if (isMySQL) {
+    filesToRemove.push(
+      path.join(
+        process.cwd(),
+        'src',
+        'database',
+        'migrations',
+        '1715028537217-CreateUser.ts',
+      ),
+    );
+  } else {
+    filesToRemove.push(
+      path.join(
+        process.cwd(),
+        'src',
+        'database',
+        'migrations',
+        '1759404328891-Role.ts',
+      ),
+    );
+    filesToRemove.push(
+      path.join(
+        process.cwd(),
+        'src',
+        'database',
+        'migrations',
+        '1759409120891-Status.ts',
+      ),
+    );
+    filesToRemove.push(
+      path.join(
+        process.cwd(),
+        'src',
+        'database',
+        'migrations',
+        '1759412425891-File.ts',
+      ),
+    );
+    filesToRemove.push(
+      path.join(
+        process.cwd(),
+        'src',
+        'database',
+        'migrations',
+        '1759414610891-User.ts',
+      ),
+    );
+    filesToRemove.push(
+      path.join(
+        process.cwd(),
+        'src',
+        'database',
+        'migrations',
+        '1759419405891-session.ts',
+      ),
+    );
+  }
+
   replace({
     path: path.join(process.cwd(), '.github', 'workflows', 'docker-e2e.yml'),
     actions: [
