@@ -7,7 +7,7 @@ export class CreateUser1715028537217 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TABLE "roles" (
         "id" SERIAL NOT NULL,
-        "refId" character varying(36) NOT NULL,
+        "refId" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "name" character varying NOT NULL,
         "description" character varying NOT NULL,
         "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
@@ -23,7 +23,7 @@ export class CreateUser1715028537217 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "status" (
         "id" SERIAL NOT NULL,
-        "refId" character varying(36) NOT NULL,
+        "refId" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "name" character varying NOT NULL,
         "description" character varying NOT NULL,
         "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
@@ -40,7 +40,7 @@ export class CreateUser1715028537217 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "files" (
         "id" SERIAL NOT NULL,
-        "refId" character varying(36) NOT NULL,
+        "refId" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "path" character varying NOT NULL,
         "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
         "createdById" integer NOT NULL,
@@ -56,7 +56,7 @@ export class CreateUser1715028537217 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "users" (
         "id" SERIAL NOT NULL,
-        "refId" character varying(36) NOT NULL,
+        "refId" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "email" character varying NOT NULL,
         "password" character varying,
         "provider" character varying NOT NULL DEFAULT 'email',
@@ -82,7 +82,7 @@ export class CreateUser1715028537217 implements MigrationInterface {
     await queryRunner.query(
       `CREATE TABLE "sessions" (
         "id" SERIAL NOT NULL,
-        "refId" character varying(36) NOT NULL,
+        "refId" uuid NOT NULL DEFAULT uuid_generate_v4(),
         "hash" character varying NOT NULL,
         "userId" integer NOT NULL,
         "createdAt" TIMESTAMP NOT NULL DEFAULT now(),
