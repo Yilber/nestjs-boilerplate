@@ -27,6 +27,7 @@ export class User1759414610891 implements MigrationInterface {
             name: 'provider',
             type: 'varchar',
             isNullable: false,
+            default: "'email'",
           },
           {
             name: 'socialId',
