@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { RolesModule } from './roles/roles.module';
+import { StatusesModule } from './statuses/statuses.module';
 import { UsersModule } from './users/users.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
@@ -82,6 +84,8 @@ const infrastructureDatabaseModule = (databaseConfig() as DatabaseConfig)
       imports: [ConfigModule],
       inject: [ConfigService],
     }),
+    RolesModule,
+    StatusesModule,
     UsersModule,
     FilesModule,
     AuthModule,
