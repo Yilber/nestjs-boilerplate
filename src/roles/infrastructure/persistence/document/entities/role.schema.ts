@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
+import { EntityDocumentHelperWithTimeStamp } from '../../../../../utils/document-entity-helper-with-timestamp';
 
 export type RoleSchemaDocument = HydratedDocument<RoleSchemaClass>;
 
@@ -11,7 +11,7 @@ export type RoleSchemaDocument = HydratedDocument<RoleSchemaClass>;
     getters: true,
   },
 })
-export class RoleSchemaClass extends EntityDocumentHelper {
+export class RoleSchemaClass extends EntityDocumentHelperWithTimeStamp {
   @Prop()
   name: string;
 

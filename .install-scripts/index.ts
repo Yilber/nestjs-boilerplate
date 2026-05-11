@@ -2,6 +2,7 @@ import prompts from 'prompts';
 import removeFacebookAuth from './scripts/remove-auth-facebook';
 import removeGoogleAuth from './scripts/remove-auth-google';
 import removeAppleAuth from './scripts/remove-auth-apple';
+import removeSocialAuth from './scripts/remove-social-auth';
 import removeInstallScripts from './scripts/remove-install-scripts';
 import removePostgreSql from './scripts/remove-postgresql';
 import removeMongoDb from './scripts/remove-mongodb';
@@ -93,6 +94,14 @@ import removeRelationalPropertyGeneration from './scripts/property-generation-sc
 
   if (!response.isAuthApple) {
     removeAppleAuth();
+  }
+
+  if (
+    !response.isAuthFacebook &&
+    !response.isAuthGoogle &&
+    !response.isAuthApple
+  ) {
+    removeSocialAuth();
   }
 
   removeInstallScripts();

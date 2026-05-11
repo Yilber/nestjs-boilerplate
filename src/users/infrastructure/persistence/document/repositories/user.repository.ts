@@ -117,8 +117,8 @@ export class UsersDocumentRepository implements UserRepository {
     return userObject ? UserMapper.toDomain(userObject) : null;
   }
 
-  async remove(id: User['id']): Promise<void> {
-    await this.usersModel.deleteOne({
+  remove(id: User['id']): Promise<any> {
+    return this.usersModel.deleteOne({
       _id: id.toString(),
     });
   }

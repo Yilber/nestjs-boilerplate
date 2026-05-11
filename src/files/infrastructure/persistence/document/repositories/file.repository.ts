@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { FileRepository } from '../../file.repository';
 import { FileSchemaClass } from '../entities/file.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, UpdateResult } from 'mongoose';
 import { FileType } from '../../../../domain/file';
 
 import { FileMapper } from '../mappers/file.mapper';
@@ -27,8 +27,19 @@ export class FileDocumentRepository implements FileRepository {
     return fileObject ? FileMapper.toDomain(fileObject) : null;
   }
 
+  async findByRefId(refId: FileType['refId']): Promise<NullableType<FileType>> {
+    const fileObject = await this.fileModel.findByRefId(refId);
+    return fileObject ? FileMapper.toDomain(fileObject) : null;
+  }
+
   async findByIds(ids: FileType['id'][]): Promise<FileType[]> {
     const fileObjects = await this.fileModel.find({ _id: { $in: ids } });
     return fileObjects.map((fileObject) => FileMapper.toDomain(fileObject));
+  }
+
+  remove(id: FileType['id']): Promise<UpdateResult> {
+    return this.fileModel.deleteOne({
+      _id: id.toString(),
+    });
   }
 }

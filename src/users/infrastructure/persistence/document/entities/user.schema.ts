@@ -2,9 +2,9 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
-import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
-import { StatusSchema } from '../../../../../statuses/infrastructure/persistence/document/entities/status.schema';
 import { RoleSchema } from '../../../../../roles/infrastructure/persistence/document/entities/role.schema';
+import { StatusSchema } from '../../../../../statuses/infrastructure/persistence/document/entities/status.schema';
+import { EntityDocumentHelperWithTimeStamp } from '../../../../../utils/document-entity-helper-with-timestamp';
 
 export type UserSchemaDocument = HydratedDocument<UserSchemaClass>;
 
@@ -15,15 +15,15 @@ export type UserSchemaDocument = HydratedDocument<UserSchemaClass>;
     getters: true,
   },
 })
-export class UserSchemaClass extends EntityDocumentHelper {
+export class UserSchemaClass extends EntityDocumentHelperWithTimeStamp {
   @Prop({
     type: String,
     unique: true,
   })
-  email: string | null;
+  email: string;
 
   @Prop()
-  password?: string;
+  password: string;
 
   @Prop({
     default: AuthProvidersEnum.email,
@@ -39,7 +39,7 @@ export class UserSchemaClass extends EntityDocumentHelper {
   @Prop({
     type: RoleSchema,
   })
-  role?: RoleSchema | null;
+  role?: RoleSchema;
 
   @Prop({
     type: StatusSchema,

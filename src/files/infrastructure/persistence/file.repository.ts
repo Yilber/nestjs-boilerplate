@@ -1,4 +1,4 @@
-import { UpdateResult } from 'typeorm';
+import { UpdateResult } from 'mongoose';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { FileType } from '../../domain/file';
 

@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
-import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
+import { EntityDocumentHelperWithTimeStamp } from '../../../../../utils/document-entity-helper-with-timestamp';
 
 export type SessionSchemaDocument = HydratedDocument<SessionSchemaClass>;
 
@@ -11,7 +11,7 @@ export type SessionSchemaDocument = HydratedDocument<SessionSchemaClass>;
     getters: true,
   },
 })
-export class SessionSchemaClass extends EntityDocumentHelper {
+export class SessionSchemaClass extends EntityDocumentHelperWithTimeStamp {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'UserSchemaClass' })
   user: string;
 
