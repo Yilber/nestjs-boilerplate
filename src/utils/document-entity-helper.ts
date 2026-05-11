@@ -1,4 +1,7 @@
+import { Prop } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
+import { now } from 'mongoose';
+import { UUID } from './types/uuid.type';
 
 export class EntityDocumentHelper {
   @Transform(
@@ -15,4 +18,25 @@ export class EntityDocumentHelper {
     },
   )
   public _id: string;
+
+  @Prop()
+  refId?: UUID;
+
+  @Prop({ default: now })
+  createdAt?: Date;
+
+  @Prop()
+  createdById?: number;
+
+  @Prop({ default: now })
+  updatedAt?: Date;
+
+  @Prop()
+  updatedById?: number;
+
+  @Prop()
+  deletedAt?: Date;
+
+  @Prop()
+  deletedById?: number;
 }

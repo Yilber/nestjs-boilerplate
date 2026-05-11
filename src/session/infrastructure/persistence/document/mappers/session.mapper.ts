@@ -5,7 +5,15 @@ import { SessionSchemaClass } from '../entities/session.schema';
 export class SessionMapper {
   static toDomain(raw: SessionSchemaClass): Session {
     const domainEntity = new Session();
+
     domainEntity.id = raw._id.toString();
+    domainEntity.refId = raw.refId;
+    domainEntity.createdAt = raw.createdAt;
+    domainEntity.createdById = raw.createdById;
+    domainEntity.updatedAt = raw.updatedAt;
+    domainEntity.updatedById = raw.updatedById;
+    domainEntity.deletedAt = raw.deletedAt;
+    domainEntity.deletedById = raw.deletedById;
 
     if (raw.user) {
       const user = new User();
@@ -14,22 +22,28 @@ export class SessionMapper {
     }
 
     domainEntity.hash = raw.hash;
-    domainEntity.createdAt = raw.createdAt;
-    domainEntity.updatedAt = raw.updatedAt;
-    domainEntity.deletedAt = raw.deletedAt;
+
     return domainEntity;
   }
 
   static toPersistence(domainEntity: Session): SessionSchemaClass {
-    const sessionEntity = new SessionSchemaClass();
+    const persistenceSchema = new SessionSchemaClass();
+
     if (domainEntity.id && typeof domainEntity.id === 'string') {
-      sessionEntity._id = domainEntity.id;
+      persistenceSchema._id = domainEntity.id;
     }
-    sessionEntity.user = domainEntity.user.id.toString();
-    sessionEntity.hash = domainEntity.hash;
-    sessionEntity.createdAt = domainEntity.createdAt;
-    sessionEntity.updatedAt = domainEntity.updatedAt;
-    sessionEntity.deletedAt = domainEntity.deletedAt;
-    return sessionEntity;
+
+    persistenceSchema.refId = domainEntity.refId;
+    persistenceSchema.createdAt = domainEntity.createdAt;
+    persistenceSchema.createdById = domainEntity.createdById;
+    persistenceSchema.updatedAt = domainEntity.updatedAt;
+    persistenceSchema.updatedById = domainEntity.updatedById;
+    persistenceSchema.deletedAt = domainEntity.deletedAt;
+    persistenceSchema.deletedById = domainEntity.deletedById;
+
+    persistenceSchema.user = domainEntity.user.id.toString();
+    persistenceSchema.hash = domainEntity.hash;
+
+    return persistenceSchema;
   }
 }

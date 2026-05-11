@@ -1,9 +1,9 @@
-import { FileType } from '../../../../domain/file';
-import { FileSchemaClass } from '../entities/file.schema';
+import { Role } from '../../../../domain/role';
+import { RoleSchemaClass } from '../entities/role.schema';
 
-export class FileMapper {
-  static toDomain(raw: FileSchemaClass): FileType {
-    const domainEntity = new FileType();
+export class RoleMapper {
+  public static toDomain(raw: RoleSchemaClass): Role {
+    const domainEntity = new Role();
 
     domainEntity.id = raw._id.toString();
     domainEntity.refId = raw.refId;
@@ -14,12 +14,14 @@ export class FileMapper {
     domainEntity.deletedAt = raw.deletedAt;
     domainEntity.deletedById = raw.deletedById;
 
-    domainEntity.path = raw.path;
+    domainEntity.name = raw.name;
+    domainEntity.description = raw.description;
 
     return domainEntity;
   }
-  static toPersistence(domainEntity: FileType): FileSchemaClass {
-    const persistenceSchema = new FileSchemaClass();
+
+  public static toPersistence(domainEntity: Role): RoleSchemaClass {
+    const persistenceSchema = new RoleSchemaClass();
 
     if (domainEntity.id) {
       persistenceSchema._id = domainEntity.id;
@@ -33,7 +35,8 @@ export class FileMapper {
     persistenceSchema.deletedAt = domainEntity.deletedAt;
     persistenceSchema.deletedById = domainEntity.deletedById;
 
-    persistenceSchema.path = domainEntity.path;
+    persistenceSchema.name = domainEntity.name;
+    persistenceSchema.description = domainEntity.description;
 
     return persistenceSchema;
   }

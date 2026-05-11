@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { now, HydratedDocument } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
 import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
@@ -45,15 +45,6 @@ export class UserSchemaClass extends EntityDocumentHelper {
     type: StatusSchema,
   })
   status?: StatusSchema;
-
-  @Prop({ default: now })
-  createdAt: Date;
-
-  @Prop({ default: now })
-  updatedAt: Date;
-
-  @Prop()
-  deletedAt: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserSchemaClass);

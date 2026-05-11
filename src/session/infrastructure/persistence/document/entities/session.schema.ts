@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import mongoose, { now, HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 import { EntityDocumentHelper } from '../../../../../utils/document-entity-helper';
 
 export type SessionSchemaDocument = HydratedDocument<SessionSchemaClass>;
@@ -17,15 +17,6 @@ export class SessionSchemaClass extends EntityDocumentHelper {
 
   @Prop()
   hash: string;
-
-  @Prop({ default: now })
-  createdAt: Date;
-
-  @Prop({ default: now })
-  updatedAt: Date;
-
-  @Prop()
-  deletedAt: Date;
 }
 
 export const SessionSchema = SchemaFactory.createForClass(SessionSchemaClass);
