@@ -38,12 +38,12 @@ import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllStatusesDto } from './dto/find-all-statuses.dto';
 import { UpdateResult } from 'typeorm';
 
-@ApiTags('Userstatuses')
+@ApiTags('statuses')
 @ApiBearerAuth()
 @Roles(RoleEnum.admin)
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 @Controller({
-  path: 'user-statuses',
+  path: 'statuses',
   version: '1',
 })
 export class StatusesController {

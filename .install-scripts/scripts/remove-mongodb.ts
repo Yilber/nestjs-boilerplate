@@ -440,6 +440,40 @@ const removeMongoDb = async (isMySQL = false) => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'files', 'domain', 'file.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'files', 'dto', 'file.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'package.json'),
     actions: [
       {

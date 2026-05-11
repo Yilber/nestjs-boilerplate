@@ -1,13 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { v4 as uuidv4 } from 'uuid';
+import { UUID } from '../types/uuid.type';
 
 export class TimeStampDto {
   @ApiPropertyOptional({
     type: String,
+    format: 'uuid',
     nullable: false,
     example: '69297e85-cb6c-4256-902f-bb32756b8a1d',
   })
-  refId?: string;
+  refId?: UUID;
 
   @ApiPropertyOptional({
     type: Date,
@@ -52,7 +53,7 @@ export class TimeStampDto {
   constructor(data?: TimeStampDto) {
     const now = new Date();
 
-    this.refId = data?.refId ?? uuidv4();
+    this.refId = data?.refId;
 
     this.createdById = data?.createdById ?? 1;
     this.createdAt = data?.createdAt ?? now;

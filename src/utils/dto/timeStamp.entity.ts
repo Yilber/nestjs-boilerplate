@@ -3,17 +3,19 @@ import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
+  Generated,
   UpdateDateColumn,
 } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { TimeStampDto } from './timeStamp.dto';
+import { UUID } from '../types/uuid.type';
 
 export default class TimeStampEntity
   extends BaseEntity
   implements TimeStampDto
 {
   @Column({ type: String, unique: true, nullable: false, length: 36 })
-  refId?: string;
+  @Generated('uuid')
+  refId?: UUID;
 
   @CreateDateColumn()
   createdAt?: Date;
@@ -38,7 +40,7 @@ export default class TimeStampEntity
 
     const now = new Date();
 
-    this.refId = data?.refId ?? uuidv4();
+    this.refId = data?.refId;
 
     this.createdById = data?.createdById ?? 1;
     this.createdAt = data?.createdAt ?? now;

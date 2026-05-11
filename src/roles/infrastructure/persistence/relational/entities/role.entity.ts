@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
 import { Role } from '../../../../domain/role';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
@@ -10,8 +10,8 @@ export class RoleEntity
   extends EntityRelationalHelperWithTimeStamp
   implements Role
 {
-  @PrimaryGeneratedColumn()
-  id: number | string;
+  @PrimaryColumn()
+  id: number;
 
   @Column({
     nullable: false,

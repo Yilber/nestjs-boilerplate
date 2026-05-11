@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { UserEntity } from '../../../../../users/infrastructure/persistence/relational/entities/user.entity';
 import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
 import { Status } from '../../../../domain/status';
@@ -10,8 +10,8 @@ export class StatusEntity
   extends EntityRelationalHelperWithTimeStamp
   implements Status
 {
-  @PrimaryGeneratedColumn()
-  id: number | string;
+  @PrimaryColumn()
+  id: number;
 
   @Column({
     nullable: false,

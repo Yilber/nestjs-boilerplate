@@ -8,9 +8,12 @@ const startColumns: any[] = [
   },
   {
     name: 'refId',
-    type: 'varchar',
+    type: 'uuid',
     length: '36',
     isNullable: false,
+    // isPrimary: false,
+    generationStrategy: 'uuid',
+    // default: 'uuid_generate_v4()', // For Postgres
   },
 ];
 
