@@ -1,14 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { StatusDto } from '../dto/status.dto';
 import { UserDto } from '../../users/dto/user.dto';
-import databaseConfig from '../../database/config/database.config';
-import { DatabaseConfig } from '../../database/config/database-config.type';
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
+const idType = Number;
 
 export class Status extends StatusDto {
   @ApiProperty({

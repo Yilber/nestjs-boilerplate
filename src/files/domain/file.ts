@@ -8,14 +8,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { AppConfig } from '../../config/app-config.type';
 import appConfig from '../../config/app.config';
 import { FileDto } from '../dto/file.dto';
-import { DatabaseConfig } from '../../database/config/database-config.type';
-import databaseConfig from '../../database/config/database.config';
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
+const idType = Number;
 
 export class FileType extends FileDto {
   @ApiProperty({

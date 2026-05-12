@@ -17,13 +17,10 @@ import { RoleEnum } from '../roles/roles.enum';
 import { Session } from '../session/domain/session';
 import { CreateSessionDto } from '../session/dto/create-session.dto';
 import { SessionService } from '../session/session.service';
-import { SocialInterface } from '../social/interfaces/social.interface';
 import { StatusEnum } from '../statuses/statuses.enum';
 import { User } from '../users/domain/user';
-import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { NullableType } from '../utils/types/nullable.type';
-import { AuthProvidersEnum } from './auth-providers.enum';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { AuthUpdateDto } from './dto/auth-update.dto';
@@ -49,15 +46,6 @@ export class AuthService {
         status: HttpStatus.UNAUTHORIZED,
         errors: {
           email: 'Email not found',
-        },
-      });
-    }
-
-    if (user.provider !== AuthProvidersEnum.email) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          email: `Need to login via provider: ${user.provider}`,
         },
       });
     }
@@ -107,95 +95,6 @@ export class AuthService {
     return {
       refreshToken,
       token,
-      tokenExpires,
-      user,
-    };
-  }
-
-  async validateSocialLogin(
-    authProvider: string,
-    socialData: SocialInterface,
-  ): Promise<LoginResponseDto> {
-    let user: NullableType<User> = null;
-    const socialEmail = socialData.email?.toLowerCase();
-    let userByEmail: NullableType<User> = null;
-
-    if (socialEmail) {
-      userByEmail = await this.usersService.findByEmail(socialEmail);
-    }
-
-    if (socialData.id) {
-      user = await this.usersService.findBySocialIdAndProvider({
-        socialId: socialData.id,
-        provider: authProvider,
-      });
-    }
-
-    if (user) {
-      if (socialEmail && !userByEmail) {
-        user.email = socialEmail;
-      }
-      await this.usersService.update(user.id, user);
-    } else if (userByEmail) {
-      user = userByEmail;
-    } else if (socialData.id) {
-      const role = {
-        id: RoleEnum.user,
-      };
-      const status = {
-        id: StatusEnum.active,
-      };
-
-      const salt = await bcrypt.genSalt();
-      const password = await bcrypt.hash('secret', salt);
-
-      const createUserDto: CreateUserDto = {
-        email: socialEmail,
-        password: password,
-        roleId: role.id,
-        statusId: status.id,
-        socialId: socialData.id,
-        provider: authProvider,
-      };
-
-      user = await this.usersService.create(createUserDto);
-
-      user = await this.usersService.findById(user.id);
-    }
-
-    if (!user) {
-      throw new UnprocessableEntityException({
-        status: HttpStatus.UNPROCESSABLE_ENTITY,
-        errors: {
-          user: 'userNotFound',
-        },
-      });
-    }
-
-    const hash = crypto
-      .createHash('sha256')
-      .update(randomStringGenerator())
-      .digest('hex');
-
-    const session = await this.sessionService.create({
-      userId: Number(user.id),
-      hash,
-    });
-
-    const {
-      token: jwtToken,
-      refreshToken,
-      tokenExpires,
-    } = await this.getTokensData({
-      id: user.id,
-      role: user.role,
-      sessionId: session.id,
-      hash,
-    });
-
-    return {
-      refreshToken,
-      token: jwtToken,
       tokenExpires,
       user,
     };

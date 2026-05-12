@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -12,7 +11,6 @@ import { SessionEntity } from '../../../../../session/infrastructure/persistence
 import { StatusEntity } from '../../../../../statuses/infrastructure/persistence/relational/entities/status.entity';
 import { EntityRelationalHelperWithTimeStamp } from '../../../../../utils/relational-entity-helper-with-timestamp';
 import { User } from '../../../../domain/user';
-import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
 
 @Entity({
   name: 'users',
@@ -29,13 +27,6 @@ export class UserEntity
 
   @Column({ type: String, nullable: false })
   password: string;
-
-  @Column({ default: AuthProvidersEnum.email })
-  provider: string;
-
-  @Index()
-  @Column({ type: String, nullable: true })
-  socialId?: string | null;
 
   @Column({ type: Number, nullable: false })
   roleId: number;
@@ -69,9 +60,6 @@ export class UserEntity
       this.password = data.password;
       this.roleId = data.roleId;
       this.statusId = data.statusId;
-
-      this.provider = data.provider;
-      this.socialId = data.socialId;
     }
   }
 }

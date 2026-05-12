@@ -4,14 +4,8 @@ import { SessionDto } from '../../session/dto/session.dto';
 import { StatusDto } from '../../statuses/dto/status.dto';
 import { UserDto } from '../dto/user.dto';
 import { RoleDto } from '../../roles/dto/role.dto';
-import { DatabaseConfig } from '../../database/config/database-config.type';
-import databaseConfig from '../../database/config/database.config';
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
+const idType = Number;
 
 export class User extends UserDto {
   @ApiProperty({
@@ -28,20 +22,6 @@ export class User extends UserDto {
 
   @Exclude({ toPlainOnly: true })
   password: string;
-
-  @ApiProperty({
-    type: String,
-    example: 'email',
-  })
-  @Expose({ groups: ['me', 'admin'] })
-  provider: string;
-
-  @ApiProperty({
-    type: String,
-    example: '1234567890',
-  })
-  @Expose({ groups: ['me', 'admin'] })
-  socialId?: string | null;
 
   @ApiProperty({
     type: Number,
@@ -81,9 +61,6 @@ export class User extends UserDto {
       this.password = data.password;
       this.roleId = data.roleId;
       this.statusId = data.statusId;
-
-      this.provider = data.provider;
-      this.socialId = data.socialId;
 
       this.role = data.role;
       this.status = data.status;

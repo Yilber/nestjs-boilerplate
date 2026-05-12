@@ -27,10 +27,6 @@ export class CreateUserDto extends TimeStampDto {
   @MinLength(6)
   password: string;
 
-  provider?: string;
-
-  socialId?: string | null;
-
   @ApiProperty({ type: Number })
   @IsNotEmpty()
   @IsNumber()

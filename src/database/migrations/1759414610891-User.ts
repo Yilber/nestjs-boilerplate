@@ -24,17 +24,6 @@ export class User1759414610891 implements MigrationInterface {
             isNullable: false,
           },
           {
-            name: 'provider',
-            type: 'varchar',
-            isNullable: false,
-            default: "'email'",
-          },
-          {
-            name: 'socialId',
-            type: 'varchar',
-            isNullable: true,
-          },
-          {
             name: 'roleId',
             type: 'int',
             isNullable: false,

@@ -1,14 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from '../../users/dto/user.dto';
 import { RoleDto } from '../dto/role.dto';
-import { DatabaseConfig } from '../../database/config/database-config.type';
-import databaseConfig from '../../database/config/database.config';
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
+const idType = Number;
 
 export class Role extends RoleDto {
   @ApiProperty({

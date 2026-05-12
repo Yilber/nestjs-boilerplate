@@ -1,14 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../users/domain/user';
 import { SessionDto } from '../dto/session.dto';
-import { DatabaseConfig } from '../../database/config/database-config.type';
-import databaseConfig from '../../database/config/database.config';
 
-// <database-block>
-const idType = (databaseConfig() as DatabaseConfig).isDocumentDatabase
-  ? String
-  : Number;
-// </database-block>
+const idType = Number;
 
 export class Session extends SessionDto {
   @ApiProperty({

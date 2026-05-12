@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { isEmpty } from 'class-validator';
-import { AuthProvidersEnum } from '../auth/auth-providers.enum';
 import { RoleEnum } from '../roles/roles.enum';
 import { StatusEnum } from '../statuses/statuses.enum';
 import { NullableType } from '../utils/types/nullable.type';
@@ -78,7 +77,6 @@ export class UsersService {
       ...createUserDto,
       // Do not remove comment below.
       // <creating-property-payload />
-      provider: createUserDto.provider ?? AuthProvidersEnum.email,
     });
   }
 
@@ -112,19 +110,6 @@ export class UsersService {
 
   findByEmail(email: User['email']): Promise<NullableType<User>> {
     return this.usersRepository.findByEmail(email);
-  }
-
-  findBySocialIdAndProvider({
-    socialId,
-    provider,
-  }: {
-    socialId: User['socialId'];
-    provider: User['provider'];
-  }): Promise<NullableType<User>> {
-    return this.usersRepository.findBySocialIdAndProvider({
-      socialId,
-      provider,
-    });
   }
 
   async update(
