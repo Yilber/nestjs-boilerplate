@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { FileType } from '../../../../domain/file';
 import { FileRepository } from '../../file.repository';
 import { FileSchemaClass } from '../entities/file.schema';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateResult } from 'mongoose';
-import { FileType } from '../../../../domain/file';
 
-import { FileMapper } from '../mappers/file.mapper';
 import { NullableType } from '../../../../../utils/types/nullable.type';
+import { FileMapper } from '../mappers/file.mapper';
 
 @Injectable()
 export class FileDocumentRepository implements FileRepository {
@@ -28,16 +28,19 @@ export class FileDocumentRepository implements FileRepository {
   }
 
   async findByRefId(refId: FileType['refId']): Promise<NullableType<FileType>> {
-    const fileObject = await this.fileModel.findByRefId(refId);
+    const fileObject = await this.fileModel.findOne({ refId });
     return fileObject ? FileMapper.toDomain(fileObject) : null;
   }
 
   async findByIds(ids: FileType['id'][]): Promise<FileType[]> {
-    const fileObjects = await this.fileModel.find({ _id: { $in: ids } });
+    const fileObjects = await this.fileModel.find({
+      _id: { $in: ids.map((id) => id.toString()) },
+    });
+
     return fileObjects.map((fileObject) => FileMapper.toDomain(fileObject));
   }
 
-  remove(id: FileType['id']): Promise<UpdateResult> {
+  remove(id: FileType['id']): Promise<any> {
     return this.fileModel.deleteOne({
       _id: id.toString(),
     });

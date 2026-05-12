@@ -1,4 +1,3 @@
-import { UpdateResult } from 'typeorm';
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
@@ -26,7 +25,7 @@ export abstract class RoleRepository {
   abstract update(
     id: Role['id'],
     payload: DeepPartial<Role>,
-  ): Promise<Role | UpdateResult>;
+  ): Promise<Role | any>;
 
-  // abstract remove(id: Role['id']): Promise<UpdateResult>;
+  abstract remove(id: Role['id']): Promise<any>;
 }

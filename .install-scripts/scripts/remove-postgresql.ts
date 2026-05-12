@@ -60,6 +60,13 @@ const removePostgreSql = async () => {
     path.join(process.cwd(), 'relational.test.Dockerfile'),
     path.join(process.cwd(), '.hygen', 'seeds', 'create-relational'),
     path.join(process.cwd(), 'src', 'utils', 'relational-entity-helper.ts'),
+    path.join(process.cwd(), 'src', 'utils', 'dto', 'timeStamp.entity.ts'),
+    path.join(
+      process.cwd(),
+      'src',
+      'utils',
+      'relational-entity-helper-with-timestamp.ts',
+    ),
   ];
 
   replace({
@@ -108,6 +115,40 @@ const removePostgreSql = async () => {
       {
         find: /\s*import \{ RelationalFilePersistenceModule \} from .*/g,
         replace: '',
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'files', 'domain', 'file.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'files', 'dto', 'file.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
       },
       {
         find: /\s*import \{ DatabaseConfig \} from .*/g,
@@ -228,6 +269,40 @@ const removePostgreSql = async () => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'session', 'domain', 'session.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'session', 'dto', 'session.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'src', 'users', 'users.module.ts'),
     actions: [
       {
@@ -266,6 +341,44 @@ const removePostgreSql = async () => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'users', 'dto', 'user.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'statuses', 'statuses.module.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const infrastructurePersistenceModule = DocumentStatusPersistenceModule;`,
+      },
+      {
+        find: /\s*import \{ RelationalStatusPersistenceModule \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'src', 'statuses', 'domain', 'status.ts'),
     actions: [
       {
@@ -283,7 +396,62 @@ const removePostgreSql = async () => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'statuses', 'dto', 'status.dto.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'roles', 'roles.module.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const infrastructurePersistenceModule = DocumentRolePersistenceModule;`,
+      },
+      {
+        find: /\s*import \{ RelationalRolePersistenceModule \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'src', 'roles', 'domain', 'role.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const idType = String;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'roles', 'dto', 'role.dto.ts'),
     actions: [
       {
         find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,

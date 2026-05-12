@@ -36,7 +36,6 @@ import { RoleEnum } from '../roles/roles.enum';
 import { Roles } from '../roles/roles.decorator';
 import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllRolesDto } from './dto/find-all-roles.dto';
-import { UpdateResult } from 'typeorm';
 
 @ApiTags('Roles')
 @ApiBearerAuth()
@@ -179,7 +178,7 @@ export class RolesController {
     @Request() request: any,
     @Param('id') id: Role['id'],
     @Body() updateRoleDto: UpdateRoleDto,
-  ): Promise<Role | UpdateResult> {
+  ): Promise<Role | any> {
     updateRoleDto.updatedById = Number(request.user.id);
 
     return this.rolesService.update(id, updateRoleDto);
@@ -205,7 +204,7 @@ export class RolesController {
   removeRole(
     @Request() request: any,
     @Param('id') id: Role['id'],
-  ): Promise<Role | UpdateResult> {
+  ): Promise<Role | any> {
     const deletedById = Number(request.user.id);
 
     return this.rolesService.update(id, {

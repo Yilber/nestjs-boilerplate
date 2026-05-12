@@ -24,7 +24,7 @@ export class StatusMapper {
     const persistenceSchema = new StatusSchemaClass();
 
     if (domainEntity.id) {
-      persistenceSchema._id = domainEntity.id;
+      persistenceSchema._id = domainEntity.id.toString();
     }
 
     persistenceSchema.refId = domainEntity.refId;

@@ -22,7 +22,7 @@ export class FileMapper {
     const persistenceSchema = new FileSchemaClass();
 
     if (domainEntity.id) {
-      persistenceSchema._id = domainEntity.id;
+      persistenceSchema._id = domainEntity.id.toString();
     }
 
     persistenceSchema.refId = domainEntity.refId;

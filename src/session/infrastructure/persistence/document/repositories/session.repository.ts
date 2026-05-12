@@ -91,4 +91,8 @@ export class SessionDocumentRepository implements SessionRepository {
       _id: { $not: { $eq: excludeSessionId.toString() } },
     });
   }
+
+  remove(id: Session['id']): Promise<any> {
+    return this.sessionModel.deleteOne({ _id: id.toString() });
+  }
 }

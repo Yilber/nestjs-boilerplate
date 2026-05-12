@@ -1,5 +1,5 @@
-import { DeepPartial, UpdateResult } from 'typeorm';
 import { User } from '../../../users/domain/user';
+import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { Session } from '../../domain/session';
 
@@ -13,7 +13,7 @@ export abstract class SessionRepository {
   abstract update(
     id: Session['id'],
     payload: DeepPartial<Session>,
-  ): Promise<Session | UpdateResult>;
+  ): Promise<Session | any>;
 
   abstract updateByHash(
     conditions: { id: Session['id']; hash: Session['hash'] },
@@ -31,5 +31,5 @@ export abstract class SessionRepository {
     excludeSessionId: Session['id'];
   }): Promise<void>;
 
-  abstract remove(id: Session['id']): Promise<UpdateResult>;
+  abstract remove(id: Session['id']): Promise<any>;
 }

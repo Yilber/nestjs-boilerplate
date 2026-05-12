@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { NullableType } from '../../../../../utils/types/nullable.type';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { RoleSchemaClass } from '../entities/role.schema';
-import { RoleRepository } from '../../role.repository';
-import { Role } from '../../../../domain/role';
-import { RoleMapper } from '../mappers/role.mapper';
+import { NullableType } from '../../../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../../../utils/types/pagination-options';
+import { Role } from '../../../../domain/role';
+import { RoleRepository } from '../../role.repository';
+import { RoleSchemaClass } from '../entities/role.schema';
+import { RoleMapper } from '../mappers/role.mapper';
 
 @Injectable()
 export class RoleDocumentRepository implements RoleRepository {
@@ -37,13 +37,26 @@ export class RoleDocumentRepository implements RoleRepository {
     );
   }
 
+  async findByName(name: Role['name']): Promise<NullableType<Role>> {
+    const entityObject = await this.roleModel.findOne({ name });
+    return entityObject ? RoleMapper.toDomain(entityObject) : null;
+  }
+
+  async findByRefId(refId: Role['refId']): Promise<NullableType<Role>> {
+    const entityObject = await this.roleModel.findOne({ refId });
+    return entityObject ? RoleMapper.toDomain(entityObject) : null;
+  }
+
   async findById(id: Role['id']): Promise<NullableType<Role>> {
     const entityObject = await this.roleModel.findById(id);
     return entityObject ? RoleMapper.toDomain(entityObject) : null;
   }
 
   async findByIds(ids: Role['id'][]): Promise<Role[]> {
-    const entityObjects = await this.roleModel.find({ _id: { $in: ids } });
+    const entityObjects = await this.roleModel.find({
+      _id: { $in: ids.map((id) => id.toString()) },
+    });
+
     return entityObjects.map((entityObject) =>
       RoleMapper.toDomain(entityObject),
     );
@@ -75,7 +88,7 @@ export class RoleDocumentRepository implements RoleRepository {
     return entityObject ? RoleMapper.toDomain(entityObject) : null;
   }
 
-  async remove(id: Role['id']): Promise<void> {
-    await this.roleModel.deleteOne({ _id: id });
+  remove(id: Role['id']): Promise<any> {
+    return this.roleModel.deleteOne({ _id: id.toString() });
   }
 }

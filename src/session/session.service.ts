@@ -2,7 +2,6 @@ import {
   // common
   Injectable,
 } from '@nestjs/common';
-import { UpdateResult } from 'typeorm';
 import { User } from '../users/domain/user';
 import { NullableType } from '../utils/types/nullable.type';
 import { Session } from './domain/session';
@@ -35,7 +34,7 @@ export class SessionService {
   update(
     id: Session['id'],
     updateSessionDto: UpdateSessionDto,
-  ): Promise<Session | UpdateResult> {
+  ): Promise<Session | any> {
     // Do not remove comment below.
     // <updating-property />
 
@@ -70,7 +69,7 @@ export class SessionService {
     return this.sessionRepository.deleteByUserIdWithExclude(conditions);
   }
 
-  remove(id: Session['id']): Promise<UpdateResult> {
+  remove(id: Session['id']): Promise<any> {
     return this.sessionRepository.remove(id);
   }
 }

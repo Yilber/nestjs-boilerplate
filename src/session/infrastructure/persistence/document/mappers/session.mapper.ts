@@ -41,7 +41,7 @@ export class SessionMapper {
     persistenceSchema.deletedAt = domainEntity.deletedAt;
     persistenceSchema.deletedById = domainEntity.deletedById;
 
-    persistenceSchema.user = domainEntity.user.id.toString();
+    persistenceSchema.userId = domainEntity.userId;
     persistenceSchema.hash = domainEntity.hash;
 
     return persistenceSchema;

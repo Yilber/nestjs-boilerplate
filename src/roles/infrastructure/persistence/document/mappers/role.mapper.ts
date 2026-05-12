@@ -24,7 +24,7 @@ export class RoleMapper {
     const persistenceSchema = new RoleSchemaClass();
 
     if (domainEntity.id) {
-      persistenceSchema._id = domainEntity.id;
+      persistenceSchema._id = domainEntity.id.toString();
     }
 
     persistenceSchema.refId = domainEntity.refId;

@@ -1,4 +1,3 @@
-import { UpdateResult } from 'mongoose';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { FileType } from '../../domain/file';
 
@@ -15,5 +14,5 @@ export abstract class FileRepository {
 
   abstract findByIds(ids: FileType['id'][]): Promise<FileType[]>;
 
-  abstract remove(id: FileType['id']): Promise<UpdateResult>;
+  abstract remove(id: FileType['id']): Promise<any>;
 }

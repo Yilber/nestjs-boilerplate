@@ -8,7 +8,6 @@ import { RoleRepository } from './infrastructure/persistence/role.repository';
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Role } from './domain/role';
 import { NullableType } from '../utils/types/nullable.type';
-import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class RolesService {
@@ -60,7 +59,7 @@ export class RolesService {
   async update(
     id: Role['id'],
     updateRoleDto: UpdateRoleDto,
-  ): Promise<Role | UpdateResult> {
+  ): Promise<Role | any> {
     // Do not remove comment below.
     // <updating-property />
 

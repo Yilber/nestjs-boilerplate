@@ -26,8 +26,6 @@ import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/roles.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
-import { UpdateResult } from 'typeorm';
 import { RolesGuard } from '../roles/roles.guard';
 import {
   InfinityPaginationResponse,
@@ -162,7 +160,7 @@ export class UsersController {
     @Request() request: any,
     @Param('id') id: User['id'],
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<User | UpdateResult> {
+  ): Promise<User | any> {
     updateUserDto.updatedById = Number(request.user.id);
 
     return this.usersService.update(id, updateUserDto);
@@ -188,7 +186,7 @@ export class UsersController {
   removeUser(
     @Request() request: any,
     @Param('id') id: User['id'],
-  ): Promise<User | UpdateResult> {
+  ): Promise<User | any> {
     const deletedById = Number(request.user.id);
 
     return this.usersService.update(id, {

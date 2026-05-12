@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { isEmpty } from 'class-validator';
-import { UpdateResult } from 'typeorm';
 import { AuthProvidersEnum } from '../auth/auth-providers.enum';
 import { RoleEnum } from '../roles/roles.enum';
 import { StatusEnum } from '../statuses/statuses.enum';
@@ -131,7 +130,7 @@ export class UsersService {
   async update(
     id: User['id'],
     updateUserDto: UpdateUserDto,
-  ): Promise<User | UpdateResult> {
+  ): Promise<User | any> {
     // Do not remove comment below.
     // <updating-property />
 
@@ -199,7 +198,7 @@ export class UsersService {
     });
   }
 
-  remove(id: User['id']): Promise<UpdateResult> {
+  remove(id: User['id']): Promise<any> {
     return this.usersRepository.remove(id);
   }
 }

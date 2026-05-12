@@ -37,13 +37,25 @@ export class StatusDocumentRepository implements StatusRepository {
     );
   }
 
+  async findByName(name: Status['name']): Promise<NullableType<Status>> {
+    const entityObject = await this.statusModel.findOne({ name });
+    return entityObject ? StatusMapper.toDomain(entityObject) : null;
+  }
+
+  async findByRefId(refId: Status['refId']): Promise<NullableType<Status>> {
+    const entityObject = await this.statusModel.findOne({ refId });
+    return entityObject ? StatusMapper.toDomain(entityObject) : null;
+  }
+
   async findById(id: Status['id']): Promise<NullableType<Status>> {
     const entityObject = await this.statusModel.findById(id);
     return entityObject ? StatusMapper.toDomain(entityObject) : null;
   }
 
   async findByIds(ids: Status['id'][]): Promise<Status[]> {
-    const entityObjects = await this.statusModel.find({ _id: { $in: ids } });
+    const entityObjects = await this.statusModel.find({
+      _id: { $in: ids.map((id) => id.toString()) },
+    });
     return entityObjects.map((entityObject) =>
       StatusMapper.toDomain(entityObject),
     );
@@ -76,6 +88,6 @@ export class StatusDocumentRepository implements StatusRepository {
   }
 
   async remove(id: Status['id']): Promise<void> {
-    await this.statusModel.deleteOne({ _id: id });
+    await this.statusModel.deleteOne({ _id: id.toString() });
   }
 }

@@ -20,7 +20,6 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { UpdateResult } from 'typeorm';
 import { Roles } from '../roles/roles.decorator';
 import { RoleEnum } from '../roles/roles.enum';
 import { RolesGuard } from '../roles/roles.guard';
@@ -94,7 +93,7 @@ export class SessionController {
     @Request() request: any,
     @Param('id') id: Session['id'],
     @Body() updateSessionDto: UpdateSessionDto,
-  ): Promise<Session | UpdateResult> {
+  ): Promise<Session | any> {
     updateSessionDto.updatedById = Number(request.user.id);
 
     return this.sessionService.update(id, updateSessionDto);
@@ -107,7 +106,7 @@ export class SessionController {
     required: true,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
-  removeSession(@Param('id') id: Session['id']): Promise<UpdateResult> {
+  removeSession(@Param('id') id: Session['id']): Promise<any> {
     return this.sessionService.remove(id);
   }
 }

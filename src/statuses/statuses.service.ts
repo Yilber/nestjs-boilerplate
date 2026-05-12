@@ -8,7 +8,6 @@ import { StatusRepository } from './infrastructure/persistence/status.repository
 import { IPaginationOptions } from '../utils/types/pagination-options';
 import { Status } from './domain/status';
 import { NullableType } from '../utils/types/nullable.type';
-import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class StatusesService {
@@ -60,7 +59,7 @@ export class StatusesService {
   async update(
     id: Status['id'],
     updateStatusDto: UpdateStatusDto,
-  ): Promise<Status | UpdateResult> {
+  ): Promise<Status | any> {
     // Do not remove comment below.
     // <updating-property />
 
@@ -72,7 +71,7 @@ export class StatusesService {
   }
 
   /*
-  remove(id: Status['id']): Promise<UpdateResult> {
+  remove(id: Status['id']): Promise<any> {
     return this.statusRepository.remove(id);
   }
   */

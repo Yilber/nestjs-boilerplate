@@ -63,6 +63,11 @@ export class UsersDocumentRepository implements UserRepository {
     return userObject ? UserMapper.toDomain(userObject) : null;
   }
 
+  async findByRefId(refId: User['refId']): Promise<NullableType<User>> {
+    const userObject = await this.usersModel.findOne({ refId });
+    return userObject ? UserMapper.toDomain(userObject) : null;
+  }
+
   async findByIds(ids: User['id'][]): Promise<User[]> {
     const userObjects = await this.usersModel.find({
       _id: { $in: ids.map((id) => id.toString()) },

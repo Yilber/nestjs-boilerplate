@@ -1,4 +1,3 @@
-import { UpdateResult } from 'typeorm';
 import { DeepPartial } from '../../../utils/types/deep-partial.type';
 import { NullableType } from '../../../utils/types/nullable.type';
 import { IPaginationOptions } from '../../../utils/types/pagination-options';
@@ -39,7 +38,7 @@ export abstract class UserRepository {
   abstract update(
     id: User['id'],
     payload: DeepPartial<User>,
-  ): Promise<User | UpdateResult>;
+  ): Promise<User | any>;
 
-  abstract remove(id: User['id']): Promise<UpdateResult>;
+  abstract remove(id: User['id']): Promise<any>;
 }

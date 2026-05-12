@@ -16,6 +16,9 @@ export class SessionSchemaClass extends EntityDocumentHelperWithTimeStamp {
   user: string;
 
   @Prop()
+  userId: number;
+
+  @Prop()
   hash: string;
 }
 

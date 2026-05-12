@@ -36,7 +36,6 @@ import { RoleEnum } from '../roles/roles.enum';
 import { Roles } from '../roles/roles.decorator';
 import { infinityPagination } from '../utils/infinity-pagination';
 import { FindAllStatusesDto } from './dto/find-all-statuses.dto';
-import { UpdateResult } from 'typeorm';
 
 @ApiTags('statuses')
 @ApiBearerAuth()
@@ -182,7 +181,7 @@ export class StatusesController {
     @Request() request: any,
     @Param('id') id: Status['id'],
     @Body() updateStatusDto: UpdateStatusDto,
-  ): Promise<Status | UpdateResult> {
+  ): Promise<Status | any> {
     updateStatusDto.updatedById = Number(request.user.id);
 
     return this.statusesService.update(id, updateStatusDto);
@@ -208,7 +207,7 @@ export class StatusesController {
   removeStatus(
     @Request() request: any,
     @Param('id') id: Status['id'],
-  ): Promise<Status | UpdateResult> {
+  ): Promise<Status | any> {
     const deletedById = Number(request.user.id);
 
     return this.statusesService.update(id, {

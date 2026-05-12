@@ -2,8 +2,14 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
 import { AuthProvidersEnum } from '../../../../../auth/auth-providers.enum';
-import { RoleSchema } from '../../../../../roles/infrastructure/persistence/document/entities/role.schema';
-import { StatusSchema } from '../../../../../statuses/infrastructure/persistence/document/entities/status.schema';
+import {
+  RoleSchema,
+  RoleSchemaClass,
+} from '../../../../../roles/infrastructure/persistence/document/entities/role.schema';
+import {
+  StatusSchema,
+  StatusSchemaClass,
+} from '../../../../../statuses/infrastructure/persistence/document/entities/status.schema';
 import { EntityDocumentHelperWithTimeStamp } from '../../../../../utils/document-entity-helper-with-timestamp';
 
 export type UserSchemaDocument = HydratedDocument<UserSchemaClass>;
@@ -37,14 +43,24 @@ export class UserSchemaClass extends EntityDocumentHelperWithTimeStamp {
   socialId?: string | null;
 
   @Prop({
+    type: Number,
+  })
+  roleId?: number;
+
+  @Prop({
+    type: Number,
+  })
+  statusId?: number;
+
+  @Prop({
     type: RoleSchema,
   })
-  role?: RoleSchema;
+  role?: RoleSchemaClass;
 
   @Prop({
     type: StatusSchema,
   })
-  status?: StatusSchema;
+  status?: StatusSchemaClass;
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserSchemaClass);

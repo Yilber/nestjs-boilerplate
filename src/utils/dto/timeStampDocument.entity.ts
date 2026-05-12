@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, now } from 'mongoose';
-import { v4 as uuidv4 } from 'uuid';
 import { UUID } from '../types/uuid.type';
 import { TimeStampDto } from './timeStamp.dto';
 
@@ -48,7 +47,7 @@ export class TimeStampSchemaClass implements TimeStampDto {
   constructor(data?: TimeStampDto) {
     const now = new Date();
 
-    this.refId = data?.refId ?? uuidv4();
+    this.refId = data?.refId;
 
     this.createdById = data?.createdById ?? 1;
     this.createdAt = data?.createdAt ?? now;
