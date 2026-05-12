@@ -97,9 +97,7 @@ export class StatusRelationalRepository implements StatusRepository {
     return StatusMapper.toDomain(updatedEntity);
   }
 
-  /*
-  async remove(id: Status['id']): Promise<UpdateResult> {    
+  async remove(id: Status['id']): Promise<UpdateResult> {
     return this.statusRepository.softDelete(id);
   }
-  */
 }

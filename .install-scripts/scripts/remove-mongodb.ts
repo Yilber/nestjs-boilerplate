@@ -58,6 +58,19 @@ const removeMongoDb = async (isMySQL = false) => {
     path.join(process.cwd(), 'document.test.Dockerfile'),
     path.join(process.cwd(), '.hygen', 'seeds', 'create-document'),
     path.join(process.cwd(), 'src', 'utils', 'document-entity-helper.ts'),
+    path.join(
+      process.cwd(),
+      'src',
+      'utils',
+      'document-entity-helper-with-timestamp.ts',
+    ),
+    path.join(
+      process.cwd(),
+      'src',
+      'utils',
+      'dto',
+      'timeStampDocument.entity.ts',
+    ),
   ];
 
   if (isMySQL) {
@@ -338,6 +351,27 @@ const removeMongoDb = async (isMySQL = false) => {
     ],
   });
   replace({
+    path: path.join(process.cwd(), 'src', 'statuses', 'statuses.module.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const infrastructurePersistenceModule = RelationalStatusPersistenceModule;`,
+      },
+      {
+        find: /\s*import \{ DocumentStatusPersistenceModule \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
     path: path.join(process.cwd(), 'src', 'statuses', 'domain', 'status.ts'),
     actions: [
       {
@@ -360,6 +394,27 @@ const removeMongoDb = async (isMySQL = false) => {
       {
         find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
         replace: `const idType = Number;`,
+      },
+      {
+        find: /\s*import \{ DatabaseConfig \} from .*/g,
+        replace: '',
+      },
+      {
+        find: /\s*import databaseConfig from .*/g,
+        replace: '',
+      },
+    ],
+  });
+  replace({
+    path: path.join(process.cwd(), 'src', 'roles', 'roles.module.ts'),
+    actions: [
+      {
+        find: /\/\/ <database-block>.*\/\/ <\/database-block>/gs,
+        replace: `const infrastructurePersistenceModule = RelationalRolePersistenceModule;`,
+      },
+      {
+        find: /\s*import \{ DocumentRolePersistenceModule \} from .*/g,
+        replace: '',
       },
       {
         find: /\s*import \{ DatabaseConfig \} from .*/g,

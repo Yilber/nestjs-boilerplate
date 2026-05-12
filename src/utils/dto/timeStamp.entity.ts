@@ -13,7 +13,7 @@ export default class TimeStampEntity
   extends BaseEntity
   implements TimeStampDto
 {
-  @Column({ type: String, unique: true, nullable: false, length: 36 })
+  @Column({ type: 'uuid', unique: true, nullable: false })
   @Generated('uuid')
   refId?: UUID;
 

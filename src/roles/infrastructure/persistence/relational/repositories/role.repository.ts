@@ -97,9 +97,7 @@ export class RoleRelationalRepository implements RoleRepository {
     return RoleMapper.toDomain(updatedEntity);
   }
 
-  /*
-  async remove(id: Role['id']): Promise<UpdateResult> {    
+  remove(id: Role['id']): Promise<UpdateResult> {
     return this.roleRepository.softDelete(id);
   }
-  */
 }
